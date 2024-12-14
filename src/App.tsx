@@ -3,11 +3,11 @@ import playLogo from '/play.svg'
 import stopLogo from '/stop.svg'
 import pauseLogo from '/pause.svg'
 import './App.css'
-import YouTube from "react-youtube";
+import YouTube, {YouTubePlayer} from "react-youtube";
 
 
 function App() {
-    const [player, setPlayer] = useState(null);
+    const [player, setPlayer] = useState<YouTubePlayer|null>(null);
     const [isPaused, setIsPaused] = useState(false);
   const [song, setSong] = useState('nIhs1T7OcZg');
     const opts = {
