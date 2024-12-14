@@ -12,6 +12,7 @@ function App() {
     const [isPaused, setIsPaused] = useState(false);
   const [song, setSong] = useState('nIhs1T7OcZg');
   const [limit, setLimit] = useState<number>(60);
+  let timeoutIds:number[]= []
     const opts = {
         height: "0", // Hide the video
         width: "0",
@@ -30,26 +31,38 @@ function App() {
         setIsPaused(true);
         const randomNumber = getRndNumber(10,limit);
         console.log('randomNumber', randomNumber);
-        setTimeout(()=>{
-            console.log('Timeout !!')
-            pause()
-        },randomNumber*1000)
+        setManagedTimeout(() => {
+            console.log("Timeout Triggered!");
+            pause();
+        }, randomNumber*1000);
     };
 
     const pause = () => {
         console.log('pause track');
         if (player) player.pauseVideo();
         setIsPaused(false);
+        clearAllTimeouts();
     };
     const stop = ()=>{
         console.log('stop track');
         if (player) player.stopVideo();
         setIsPaused(false);
+        clearAllTimeouts();
     }
+    const setManagedTimeout = (callback: () => void, delay:number) => {
+        const id = setTimeout(callback, delay);
+        timeoutIds.push(id);
+        return id;
+    };
+    const clearAllTimeouts = () => {
+        timeoutIds.forEach((id) => clearTimeout(id));
+        timeoutIds = []; // Reset the array
+    };
     const getVideoId = (url:string) => {
         console.log('getVideoId', url);
         const urlObj = new URL(url);
-        setSong (urlObj.searchParams.get("v")||'nIhs1T7OcZg')
+        const videoId = urlObj.hostname === "youtu.be"? urlObj.pathname.slice(1):urlObj.searchParams.get("v")
+        setSong (videoId||'nIhs1T7OcZg')
         console.log('getSongId', song);
 
     };
