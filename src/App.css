@@ -37,76 +37,274 @@
   padding: 2em;
 }
 
-.mainBox{
+.playBox{
+  padding: 2em 4em 2em 10em;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem ;
+}
+.timerBox{
   padding: 2em;
   display: flex;
   flex-direction: row;
   gap: 2rem ;
 }
-
 .read-the-docs {
   color: #888;
 }
-.form__group {
-  position: relative;
-  padding: 15px 0 0;
-  margin-top: 10px;
-  width: 50%;
+
+.timer-label{
+  font-family: inherit ;
+  color: #9b9b9b;
 }
-
-.form__field {
-  font-family: inherit;
-  width: 100%;
-  border: 0;
-  border-bottom: 2px solid #9b9b9b;
-  outline: 0;
-  font-size: 1.3rem;
-  color:#fff;
-  padding: 7px 7px;
-  background: transparent;
-  transition: border-color 0.2s;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: transparent;
-  }
-
-  &:placeholder-shown ~ .form__label {
-    font-size: 1.3rem;
-    cursor: text;
-    top: 20px;
-  }
-}
-
-.form__label {
-  position: absolute;
+/* Fullscreen overlay */
+.countdown-dialog {
+  position: fixed;
   top: 0;
-  display: block;
-  transition: 0.2s;
-  font-size: 1rem;
-  color:#9b9b9b;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.form__field:focus {
-  ~ .form__label {
-    position: absolute;
-    top: 0;
-    display: block;
-    transition: 0.2s;
-    font-size: 1rem;
-    color:#11998e;
-    font-weight:700;
+/* Countdown box styling */
+.countdown-box {
+  color: #fff;
+  font-size: 10rem;
+  font-weight: bold;
+  text-align: center;
+  animation: fade-in 1s ease-out;
+}
+
+.countdown-heading {
+  font-size: 3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #ff9800; /* Vibrant orange for emphasis */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Subtle shadow for depth */
+  animation: fade-in 1.5s ease-out;
+}
+
+/* Smooth fade-in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
   }
-  padding-bottom: 6px;
-  font-weight: 700;
-  border-width: 3px;
-  border-image: linear-gradient(to right, #11998e,#38ef7d);
-  border-image-slice: 1;
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
-/* reset input */
-.form__field{
-  &:required,&:invalid { box-shadow:none; }
+
+/* Countdown number scaling effect */
+.countdown-number {
+  animation: scale-down 1s ease-in-out infinite;
 }
+
+@keyframes scale-down {
+  from {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Slider container */
+.slider-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+/* Label styling */
+.slider-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  display: block;
+  color: #938d8d;
+}
+
+/* Slider styling */
+.timer-div{
+  width: 31rem;
+}
+.hr{
+  width: 100%;
+}
+.slider {
+  -webkit-appearance: none; /* Remove default styling */
+  width: 100%;
+  height: 10px;
+  background: linear-gradient(90deg, #ff9800 0%, #4caf50 100%);
+  border-radius: 5px;
+  outline: none;
+  opacity: 0.9;
+  transition: opacity 0.3s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+/* Slider thumb styling */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4caf50;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: #388e3c;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4caf50;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s;
+}
+
+.slider::-moz-range-thumb:hover {
+  background: #388e3c;
+}
+
+/* Container for the scrolling box */
+/* Container for the scrolling box */
+/* Container for scroll box and button */
+.scrolling-box-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Spacing between box and button */
+}
+
+/* Scroll box */
+.scrolling-box {
+  width: 100px; /* Adjust width */
+  height: 50px; /* Height matches one item's height */
+  overflow-y: auto;
+  border: 2px solid #516e8e;
+  border-radius: 10px;
+  background: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #0e0e0e #f9f9f9; /* For Firefox */
+}
+
+/* Individual item */
+.scrolling-box-item {
+  font-size: 1.5rem;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 5px;
+  color: #2b2323;
+  font-weight: bold;
+  line-height: 50px; /* Center text vertically */
+  height: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Button styling */
+.set-decision-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #516e8e;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.set-decision-button:hover {
+  background-color: #388e3c;
+  transform: translateY(-2px);
+}
+
+.set-decision-button:active {
+  background-color: #2e7d32;
+  transform: translateY(1px);
+}
+
+/* Customize scrollbar for WebKit browsers */
+.scrolling-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrolling-box::-webkit-scrollbar-thumb {
+  background: #4caf50;
+  border-radius: 4px;
+}
+
+.scrolling-box::-webkit-scrollbar-track {
+  background: #f9f9f9;
+}
+
+.textarea-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.textarea-label {
+  /*font-size: 1.2rem;*/
+  font-weight: bold;
+  font-family: inherit ;
+  color: #9b9b9b;
+  margin-bottom: 8px;
+}
+
+.styled-textarea {
+  width: 100%;
+  min-height: 100px;
+  font-size: 1rem;
+  font-family: 'Arial', sans-serif;
+  color: #555;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.styled-textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.styled-textarea::placeholder {
+  color: #aaa;
+}
+
+.styled-textarea:hover {
+  border-color: #aaa;
+}
+
 /* demo */
 body {
   font-family: 'Poppins', sans-serif;
