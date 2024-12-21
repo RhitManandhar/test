@@ -14,7 +14,7 @@ const Slider = ({ limit, setLimit }: SliderProps) => {
       <label className="slider-label">Value: {limit}</label>
       <input
         type="range"
-        min={10}
+        min={15}
         max={90}
         step={1}
         value={limit}

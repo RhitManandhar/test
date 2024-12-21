@@ -15,22 +15,45 @@ function App() {
   const [player, setPlayer] = useState<YouTubePlayer | null>(null)
   const [isPaused, setIsPaused] = useState(false)
   const [song, setSong] = useState('nIhs1T7OcZg')
+  const [isBuffering, setIsBuffering] = useState(false)
+  //nIhs1T7OcZg jingle bell rock
   const [limit, setLimit] = useState<number>(60)
   const [isDialogVisible, setDialogVisible] = useState(false)
   const ticktockAudioRef = useRef<HTMLAudioElement>(null)
   const [decisionTime, setDecisionTime] = useState<number>(10)
+  const [isPlayerReady, setIsPlayerReady] = useState(false)
 
   const timeoutIdsRef = useRef<number[]>([])
 
   const onReady = (event: YouTubeEvent) => {
-    setPlayer(event.target)
-    if (player) console.log('song player is ready')
+    const playerInstance = event.target
+    playerInstance.cueVideoById(song)
+    setPlayer(playerInstance)
+    setIsPlayerReady(true)
+    console.log('song player is ready', player)
+  }
+
+  const onStateChange = (event: YouTubeEvent) => {
+    const playerState = event.data
+
+    if (playerState === 3) {
+      // Buffering state
+      console.log('Buffering audio...')
+      setIsBuffering(true)
+    } else {
+      console.log('Buffering :: false')
+      setIsBuffering(false)
+    }
   }
 
   const play = () => {
-    if (player) player.playVideo()
+    if (!player || !isPlayerReady) {
+      console.log('player is not ready')
+      return
+    }
+    player.playVideo()
     setIsPaused(true)
-    const randomNumber = getRndNumber(7, limit)
+    const randomNumber = getRndNumber(10, limit)
     console.log('PLAY :: randomNumber :: ', randomNumber)
 
     setManagedTimeout(() => {
@@ -77,6 +100,7 @@ function App() {
         ? urlObj.pathname.slice(1)
         : urlObj.searchParams.get('v')
     setSong(videoId || 'nIhs1T7OcZg')
+    setIsPlayerReady(false)
     console.log('TextBoxArea :: getVideoId :: songId set to :: ', song)
   }
 
@@ -118,8 +142,15 @@ function App() {
       />
 
       <div className="playBox">
-        <YouTube videoId={song} opts={youTubeOpts} onReady={onReady} />
-        <button onClick={isPaused ? pause : play}>
+        <YouTube
+          key={song}
+          videoId={song}
+          opts={youTubeOpts}
+          onReady={onReady}
+          onStateChange={onStateChange}
+          onError={(e: unknown) => console.log('error from youtube', e)}
+        />
+        <button onClick={isPaused ? pause : play} disabled={!isPlayerReady}>
           <img
             src={isPaused ? pauseLogo : playLogo}
             className="logo"
@@ -130,6 +161,11 @@ function App() {
           <img src={stopLogo} className="logo" alt="Stop Logo" />
         </button>
       </div>
+      {isBuffering && (
+        <div className="loading-overlay">
+          <div className="loader"></div>
+        </div>
+      )}
 
       <CountdownDialog
         isVisible={isDialogVisible}
